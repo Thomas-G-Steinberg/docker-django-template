@@ -1,0 +1,30 @@
+version: "3.9"
+   
+services:
+  db:
+    image: postgres
+    volumes:
+      - django-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=$DATABASE_NAME
+      - POSTGRES_USER=$DATABASE_USER
+      - POSTGRES_PASSWORD=$DATABASE_PASSWORD
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY
+      - DATABASE_NAME=$DATABASE_NAME
+      - DATABASE_USER=$DATABASE_USER
+      - DATABASE_PASSWORD=$DATABASE_PASSWORD
+      - DATABASE_HOST=$DATABASE_HOST
+      - DATABASE_PORT=$DATABASE_PORT
+volumes:
+  django-db:
+
